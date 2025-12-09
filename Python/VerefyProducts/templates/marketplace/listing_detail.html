@@ -1,0 +1,17 @@
+    {% extends 'base.html' %}
+{% block content %}
+  <h2>{{ listing.title }}</h2>
+  <p>Status: {{ listing.get_status_display }}</p>
+  <p>Price: {{ listing.price }}</p>
+  <p>{{ listing.description }}</p>
+  {% if listing.images.all %}
+    <div>
+      {% for img in listing.images.all %}
+        <img src="{{ img.image.url }}" style="max-width:200px;">
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% if user.is_authenticated and user == listing.seller %}
+    <p><a href="{% url 'marketplace:request_test' listing.pk %}">Request test</a></p>
+  {% endif %}
+{% endblock %}

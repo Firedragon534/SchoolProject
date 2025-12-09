@@ -1,0 +1,29 @@
+    {% extends 'base.html' %}
+{% block content %}
+      <h2>Verify {{ listing.title }}</h2>
+      <form id="verifyForm">
+        <label><input type="checkbox" name="power_on"> Powers on</label><br>
+        <label><input type="checkbox" name="screen_ok"> Screen OK</label><br>
+        <label><input type="checkbox" name="ports_ok"> Ports OK</label><br>
+        <label><input type="checkbox" name="battery_ok"> Battery OK</label><br>
+        <textarea name="notes" placeholder="Notes"></textarea><br>
+        <button type="button" onclick="submitVerification('pass')">Pass</button>
+        <button type="button" onclick="submitVerification('fail')">Fail</button>
+      </form>
+      <script>
+      function submitVerification(verdict){
+        const form = document.getElementById('verifyForm');
+        const data = {};
+        ['power_on','screen_ok','ports_ok','battery_ok'].forEach(k=>{
+          const el = form.querySelector('[name='+k+']');
+          data[k] = !!el && el.checked;
+        });
+        data.notes = form.querySelector('[name=notes]').value;
+        fetch('',{
+          method: 'POST',
+          headers: {'Content-Type':'application/json','X-CSRFToken':'{{ csrf_token }}'},
+          body: JSON.stringify({verdict: verdict, checklist: data, notes: data.notes})
+        }).then(r=>r.json()).then(j=>{ alert('Saved: '+j.verdict); window.location.href = '/'; });
+      }
+      </script>
+{% endblock %}

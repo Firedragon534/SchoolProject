@@ -1,0 +1,11 @@
+    {% extends 'base.html' %}
+{% block content %}
+  <h2>Active listings</h2>
+  <ul>
+  {% for l in listings %}
+    <li><a href="{% url 'marketplace:listing_detail' l.pk %}">{{ l.title }}</a> — {{ l.price }}</li>
+  {% empty %}
+    <li>No active listings yet.</li>
+  {% endfor %}
+  </ul>
+{% endblock %}
